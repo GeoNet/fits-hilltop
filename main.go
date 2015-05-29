@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/xml"
+	"errors"
 	"flag"
 	"fmt"
 	"github.com/AdRoll/goamz/aws"
@@ -13,6 +14,17 @@ import (
 	"strings"
 	"time"
 )
+
+var HilltopUnits = map[string]string{
+	"Air Temperature":     "t",
+	"Wind Chill":          "wc",
+	"Relative Humidity":   "rh",
+	"Rainfall":            "rn",
+	"Barometric Pressure": "ap",
+	"Wind Direction":      "wdir",
+	"Max Gust":            "wg",
+	"Average Wind":        "wm",
+}
 
 type HilltopValue struct {
 	Timestamp time.Time
@@ -61,9 +73,24 @@ func (m *HilltopMeasurement) Values() ([]HilltopValue, error) {
 	return values, nil
 }
 
-func (h *Hilltop) Observations(network, method string) ([]msg.Observation, error) {
+func (h *Hilltop) Observations(sites *HilltopSites, network, method string) ([]msg.Observation, error) {
 	var msgs []msg.Observation
 	for _, m := range h.Measurement {
+		// check we know the source ...
+		s, ok := sites.Sites[m.SiteName]
+		if !ok {
+			log.Printf("skipping unknown site: \"%s\"", m.SiteName)
+			continue
+		}
+
+		// check we know the type ...
+		t, ok := HilltopUnits[m.DataSource.Name]
+		if !ok {
+			log.Printf("skipping unknown data source: \"%s\"", m.DataSource.Name)
+			continue
+		}
+
+		// gather the value readings ...
 		values, err := m.Values()
 		if err != nil {
 			return msgs, err
@@ -71,8 +98,8 @@ func (h *Hilltop) Observations(network, method string) ([]msg.Observation, error
 		for _, v := range values {
 			msgs = append(msgs, msg.Observation{
 				NetworkID: network,
-				SiteID:    m.SiteName,
-				TypeID:    m.DataSource.Name,
+				SiteID:    s,
+				TypeID:    t,
 				MethodID:  method,
 				DateTime:  v.Timestamp,
 				Value:     v.Reading,
@@ -104,6 +131,27 @@ func DecodeHilltopFile(file string) (*Hilltop, error) {
 	return &h, nil
 }
 
+type HilltopSites struct {
+	Sites map[string]string
+}
+
+func NewHilltopSites() *HilltopSites {
+	return &HilltopSites{Sites: make(map[string]string)}
+}
+
+func (s *HilltopSites) String() string {
+	return fmt.Sprintf("%q", s.Sites)
+}
+func (s *HilltopSites) Set(arg string) error {
+	parts := strings.SplitN(arg, "=", 2)
+	if len(parts) < 2 {
+		return errors.New("invalid format: expecting <string>=<string>")
+	}
+	s.Sites[parts[0]] = parts[1]
+
+	return nil
+}
+
 func main() {
 	var Q *sqs.Queue
 
@@ -128,6 +176,9 @@ func main() {
 	flag.StringVar(&method, "method", "", "provide the FITS method")
 	var network string
 	flag.StringVar(&network, "network", "", "provide the FITS network")
+
+	var sites = NewHilltopSites()
+	flag.Var(sites, "site", "pass source name to site id conversions [\"label\"=\"code\"]")
 
 	flag.Parse()
 
@@ -185,7 +236,7 @@ func main() {
 		}
 
 		// run through each observation
-		obs, err := h.Observations(network, method)
+		obs, err := h.Observations(sites, network, method)
 		if err != nil {
 			log.Fatalf("unable to recover hilltop observations: [%s]\n", err)
 		}

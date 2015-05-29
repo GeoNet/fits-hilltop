@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<Hilltop>
+<Agency>Harvest Electronics</Agency>
+<Measurement SiteName="TongariroAlpine">
+<DataSource Name="Air Temperature" NumItems="1">
+<Interpolation>Instantaneous</Interpolation>
+</DataSource>
+<Data DateFormat="UTC">
+<V> 27-May-15 21:30:00 2.300000</V>
+</Data>
+</Measurement>
+<Measurement SiteName="TongariroAlpine">
+<DataSource Name="Wind Chill" NumItems="1">
+<Interpolation>Instantaneous</Interpolation>
+</DataSource>
+<Data DateFormat="UTC">
+<V> 27-May-15 21:30:00 2.300000</V>
+</Data>
+</Measurement>
+<Measurement SiteName="TongariroAlpine">
+<DataSource Name="Relative Humidity" NumItems="1">
+<Interpolation>Instantaneous</Interpolation>
+</DataSource>
+<Data DateFormat="UTC">
+<V> 27-May-15 21:30:00 34.239876</V>
+</Data>
+</Measurement>
+<Measurement SiteName="TongariroAlpine">
+<DataSource Name="Rainfall" NumItems="1">
+<Interpolation>Instantaneous</Interpolation>
+</DataSource>
+<Data DateFormat="UTC">
+<V> 27-May-15 21:30:00 0.000000</V>
+</Data>
+</Measurement>
+<Measurement SiteName="TongariroAlpine">
+<DataSource Name="Barometric Pressure" NumItems="1">
+<Interpolation>Instantaneous</Interpolation>
+</DataSource>
+<Data DateFormat="UTC">
+<V> 27-May-15 21:30:00 1017.011563</V>
+</Data>
+</Measurement>
+<Measurement SiteName="TongariroAlpine">
+<DataSource Name="Wind Direction" NumItems="1">
+<Interpolation>Instantaneous</Interpolation>
+</DataSource>
+<Data DateFormat="UTC">
+<V> 27-May-15 21:30:00 179.000000</V>
+</Data>
+</Measurement>
+<Measurement SiteName="TongariroAlpine">
+<DataSource Name="Max Gust" NumItems="1">
+<Interpolation>Instantaneous</Interpolation>
+</DataSource>
+<Data DateFormat="UTC">
+<V> 27-May-15 21:30:00 3.960000</V>
+</Data>
+</Measurement>
+<Measurement SiteName="TongariroAlpine">
+<DataSource Name="Average Wind" NumItems="1">
+<Interpolation>Instantaneous</Interpolation>
+</DataSource>
+<Data DateFormat="UTC">
+<V> 27-May-15 21:30:00 1.440000</V>
+</Data>
+</Measurement>
+</Hilltop>
