@@ -163,13 +163,13 @@ func main() {
 
 	// amazon queue details
 	var region string
-	flag.StringVar(&region, "region", "", "provide AWS region, overides env variable \"AWS_REGION\"")
+	flag.StringVar(&region, "region", "", "provide AWS region, overides env variable \"AWS_FITS_REGION\"")
 	var queue string
-	flag.StringVar(&queue, "queue", "", "send messages to the SQS queue, overides env variable \"AWS_QUEUE\"")
+	flag.StringVar(&queue, "queue", "", "send messages to the SQS queue, overides env variable \"AWS_FITS_QUEUE\"")
 	var key string
-	flag.StringVar(&key, "key", "", "AWS access key id, overrides env and credentials file (default profile)")
+	flag.StringVar(&key, "key", "", "AWS access key id, overrides env and credentials file")
 	var secret string
-	flag.StringVar(&secret, "secret", "", "AWS secret key id, overrides env and credentials file (default profile)")
+	flag.StringVar(&secret, "secret", "", "AWS secret key id, overrides env and credentials file")
 
 	// required fits external values
 	var method string
